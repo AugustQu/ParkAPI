@@ -26,15 +26,17 @@ def parse_html(html):
         parking_name = parking_lot.find('a').text
         lot = geodata.lot(parking_name)
 
-        parking_state = 'open'
-        parking_free = 0
-        parking_fuellstand = parking_lot.find( 'div', class_='fuellstand')
         try :
-            if ( parking_fuellstand == None ) :
-                parking_state = 'nodata'
-            else :
+            parking_state = 'open'
+            parking_free = 0
+            parking_fuellstand = parking_lot.find( 'div', class_='fuellstand')
+            if ( parking_fuellstand != None ) :
                 temp= parking_fuellstand.text.split()
                 parking_free = int(temp[0])
+            elif ( parking_lot.find( 'div', class_='geschlossen') != None ) :
+                parking_state = 'closed'
+            else :
+                parking_state = 'nodata'
         except :
             parking_state = 'nodata' 
 
